@@ -124,7 +124,6 @@ export class DashboardComponent {
         duration: 3000,
         panelClass: ['success-snackbar']
       });
-      console.log('Creating new project...');
     }, 1500);
   }
 
@@ -137,7 +136,6 @@ export class DashboardComponent {
         duration: 3000,
         panelClass: ['info-snackbar']
       });
-      console.log('Opening reports...');
     }, 1000);
   }
 
@@ -150,7 +148,6 @@ export class DashboardComponent {
         duration: 3000,
         panelClass: ['info-snackbar']
       });
-      console.log('Opening team management...');
     }, 800);
   }
 
@@ -163,7 +160,6 @@ export class DashboardComponent {
         duration: 3000,
         panelClass: ['info-snackbar']
       });
-      console.log('Opening preferences...');
     }, 600);
   }
 
@@ -172,7 +168,6 @@ export class DashboardComponent {
       duration: 2000,
       panelClass: ['info-snackbar']
     });
-    console.log('Opening help center...');
   }
 
   protected contactSupport(): void {
@@ -180,7 +175,6 @@ export class DashboardComponent {
       duration: 2000,
       panelClass: ['info-snackbar']
     });
-    console.log('Contacting support...');
   }
 
   protected learnMore(): void {
@@ -188,6 +182,5 @@ export class DashboardComponent {
       duration: 2000,
       panelClass: ['info-snackbar']
     });
-    console.log('Opening learning resources...');
   }
 }
