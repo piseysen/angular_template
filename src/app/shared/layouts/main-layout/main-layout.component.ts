@@ -9,6 +9,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from '../../../core/services/auth.service';
+import { EnvironmentIndicatorComponent } from '../../components/environment-indicator.component';
+import { EnvironmentService } from '../../../core/services/environment.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -23,7 +25,8 @@ import { AuthService } from '../../../core/services/auth.service';
     MatIconModule,
     MatSidenavModule,
     MatListModule,
-    MatMenuModule
+    MatMenuModule,
+    EnvironmentIndicatorComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -33,6 +36,7 @@ export class MainLayoutComponent {
   private readonly router = inject(Router);
 
   protected readonly isHandset = signal(false);
+  protected readonly environmentService = inject(EnvironmentService);
 
   constructor() {
     this.breakpointObserver.observe(Breakpoints.Handset).subscribe(result => {

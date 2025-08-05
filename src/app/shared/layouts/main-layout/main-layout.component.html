@@ -1,4 +1,8 @@
 <div class="flex h-screen overflow-hidden">
+  <!-- Environment Indicator -->
+  @if(environmentService.isDebugMode) {
+    <app-environment-indicator></app-environment-indicator>
+  }
   <!-- Sidebar -->
   <mat-sidenav-container class="flex-1">
     <mat-sidenav

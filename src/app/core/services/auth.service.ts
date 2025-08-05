@@ -4,17 +4,17 @@ import { Observable, of, delay, tap } from 'rxjs';
 import { User } from '../models/user';
 import { LoginCredentials } from '../models/login-credentials';
 import { RegisterData } from '../models/register-data';
+import { EnvironmentService } from './environment.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly router = inject(Router);
-
+  private readonly envService = inject(EnvironmentService);
 
   private readonly currentUser = signal<User | null>(null);
   private readonly isLoading = signal(false);
-
 
   readonly user = this.currentUser.asReadonly();
   readonly isAuthenticated = computed(() => this.currentUser() !== null);
@@ -22,6 +22,8 @@ export class AuthService {
 
   constructor() {
     this.checkExistingSession();
+    // Log environment info on service initialization
+    this.envService.logEnvironmentInfo();
   }
 
   /**
