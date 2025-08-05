@@ -1,127 +1,201 @@
-<div class="space-y-6">
-  <div class="text-center">
-    <h2 class="text-2xl font-bold text-gray-900">Create account</h2>
-    <p class="text-gray-600 mt-2">Join us today</p>
-  </div>
-
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>First Name</mat-label>
-        <input
-          matInput
-          type="text"
-          formControlName="firstName"
-          placeholder="First name"
-        />
-        @if (registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched) {
-          <mat-error>First name is required</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Last Name</mat-label>
-        <input
-          matInput
-          type="text"
-          formControlName="lastName"
-          placeholder="Last name"
-        />
-        @if (registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched) {
-          <mat-error>Last name is required</mat-error>
-        }
-      </mat-form-field>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <!-- Header Section -->
+    <div class="text-center">
+      <div class="mx-auto h-16 w-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center mb-6 shadow-lg">
+        <mat-icon class="text-white text-3xl">person_add</mat-icon>
+      </div>
+      <h2 class="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+        Create Account
+      </h2>
+      <p class="mt-2 text-gray-600">Join us and start your journey</p>
     </div>
 
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Email</mat-label>
-      <input
-        matInput
-        type="email"
-        formControlName="email"
-        placeholder="Enter your email"
-      />
-      <mat-icon matSuffix>email</mat-icon>
-      @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
-        <mat-error>Please enter a valid email</mat-error>
-      }
-    </mat-form-field>
+    <!-- Register Card -->
+    <div class="bg-white/80 backdrop-blur-sm shadow-2xl rounded-2xl border border-gray-100 p-8">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Name Fields -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <mat-form-field appearance="outline" class="w-full modern-field">
+              <mat-label>First Name</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="firstName"
+                placeholder="First name"
+                class="text-base"
+              />
+              <mat-icon matSuffix class="text-gray-400">person</mat-icon>
+              @if (registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched) {
+                <mat-error>
+                  <mat-icon class="text-xs mr-1">error</mat-icon>
+                  First name is required
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
 
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Password</mat-label>
-      <input
-        matInput
-        [type]="hidePassword() ? 'password' : 'text'"
-        formControlName="password"
-        placeholder="Create a password"
-      />
-      <button
-        mat-icon-button
-        matSuffix
-        type="button"
-        (click)="togglePasswordVisibility()"
-      >
-        <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-      </button>
-      @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
-        <mat-error>Password must be at least 6 characters</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Confirm Password</mat-label>
-      <input
-        matInput
-        [type]="hideConfirmPassword() ? 'password' : 'text'"
-        formControlName="confirmPassword"
-        placeholder="Confirm your password"
-      />
-      <button
-        mat-icon-button
-        matSuffix
-        type="button"
-        (click)="toggleConfirmPasswordVisibility()"
-      >
-        <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-      </button>
-      @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
-        <mat-error>Passwords do not match</mat-error>
-      }
-    </mat-form-field>
-
-    @if (error()) {
-      <div class="bg-red-50 border border-red-200 rounded-lg p-3">
-        <p class="text-sm text-red-600">{{ error() }}</p>
-      </div>
-    }
-
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      [disabled]="registerForm.invalid || authService.loading()"
-      class="w-full py-3 relative"
-    >
-      @if (authService.loading()) {
-        <div class="loading-content">
-          <mat-spinner diameter="20" color="accent"></mat-spinner>
-          <span>Creating account...</span>
+          <div class="space-y-1">
+            <mat-form-field appearance="outline" class="w-full modern-field">
+              <mat-label>Last Name</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="lastName"
+                placeholder="Last name"
+                class="text-base"
+              />
+              <mat-icon matSuffix class="text-gray-400">person</mat-icon>
+              @if (registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched) {
+                <mat-error>
+                  <mat-icon class="text-xs mr-1">error</mat-icon>
+                  Last name is required
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
         </div>
-      } @else {
-        Create account
-      }
-    </button>
-  </form>
 
-  <div class="text-center">
-    <p class="text-gray-600">
-      Already have an account?
-      <a
-        routerLink="/auth/login"
-        class="text-blue-600 hover:text-blue-500 font-medium ml-1"
-      >
-        Sign in
-      </a>
-    </p>
+        <!-- Email Field -->
+        <div class="space-y-1">
+          <mat-form-field appearance="outline" class="w-full modern-field">
+            <mat-label>Email Address</mat-label>
+            <input
+              matInput
+              type="email"
+              formControlName="email"
+              placeholder="Enter your email"
+              class="text-base"
+            />
+            <mat-icon matSuffix class="text-gray-400">email</mat-icon>
+            @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+              <mat-error>
+                <mat-icon class="text-xs mr-1">error</mat-icon>
+                Please enter a valid email
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Password Field -->
+        <div class="space-y-1">
+          <mat-form-field appearance="outline" class="w-full modern-field">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="hidePassword() ? 'password' : 'text'"
+              formControlName="password"
+              placeholder="Create a password"
+              class="text-base"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+              <mat-error>
+                <mat-icon class="text-xs mr-1">error</mat-icon>
+                Password must be at least 6 characters
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="space-y-1">
+          <mat-form-field appearance="outline" class="w-full modern-field">
+            <mat-label>Confirm Password</mat-label>
+            <input
+              matInput
+              [type]="hideConfirmPassword() ? 'password' : 'text'"
+              formControlName="confirmPassword"
+              placeholder="Confirm your password"
+              class="text-base"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+              class="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched) {
+              <mat-error>
+                <mat-icon class="text-xs mr-1">error</mat-icon>
+                Passwords do not match
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Error Message -->
+        @if (error()) {
+          <div class="bg-red-50 border-l-4 border-red-400 rounded-lg p-4 animate-shake">
+            <div class="flex items-center">
+              <mat-icon class="text-red-400 mr-2">error_outline</mat-icon>
+              <p class="text-sm text-red-700 font-medium">{{ error() }}</p>
+            </div>
+          </div>
+        }
+
+        <!-- Terms Notice -->
+        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-4">
+          <div class="flex items-center mb-2">
+            <mat-icon class="text-indigo-600 mr-2 text-lg">info</mat-icon>
+            <span class="font-semibold text-indigo-800">Registration Info</span>
+          </div>
+          <p class="text-sm text-indigo-700">
+            By creating an account, you agree to our terms of service and privacy policy.
+          </p>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="registerForm.invalid || authService.loading()"
+          class="w-full py-4 text-base font-semibold rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transform transition-all duration-200 hover:scale-[1.02] shadow-lg hover:shadow-xl"
+        >
+          @if (authService.loading()) {
+            <div class="loading-content">
+              <mat-spinner diameter="20" color="accent" class="mr-3"></mat-spinner>
+              <span>Creating your account...</span>
+            </div>
+          } @else {
+            <div class="flex items-center justify-center">
+              <mat-icon class="mr-2">person_add</mat-icon>
+              <span>Create Account</span>
+            </div>
+          }
+        </button>
+      </form>
+    </div>
+
+    <!-- Sign In Link -->
+    <div class="text-center">
+      <p class="text-gray-600">
+        Already have an account?
+        <a
+          routerLink="/auth/login"
+          class="font-semibold text-indigo-600 hover:text-indigo-500 ml-1 transition-colors hover:underline"
+        >
+          Sign in here
+        </a>
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center text-xs text-gray-400 mt-8">
+      <p>Secure registration powered by Angular 20+ & Material Design</p>
+    </div>
   </div>
 </div>

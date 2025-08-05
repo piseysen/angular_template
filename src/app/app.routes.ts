@@ -23,12 +23,12 @@ export const routes: Routes = [
       {
         path: 'login',
         loadComponent: () => import('./features/auth/login.component').then(c => c.LoginComponent),
-        title: 'Login - Template App'
+        title: 'Login'
       },
       {
         path: 'register',
         loadComponent: () => import('./features/auth/register.component').then(c => c.RegisterComponent),
-        title: 'Register - Template App'
+        title: 'Register'
       }
     ]
   },
@@ -42,12 +42,12 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () => import('./features/dashboard/dashboard.component').then(c => c.DashboardComponent),
-        title: 'Dashboard - Template App'
+        title: 'Dashboard'
       },
       {
         path: 'profile',
         loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),
-        title: 'Profile - Template App'
+        title: 'Profile'
       }
     ]
   },
