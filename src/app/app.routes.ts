@@ -13,7 +13,7 @@ export const routes: Routes = [
   {
     path: 'auth',
     canActivate: [guestGuard],
-    loadComponent: () => import('./shared/layouts/auth-layout.component').then(c => c.AuthLayoutComponent),
+    loadComponent: () => import('./shared/layouts/auth-layout/auth-layout.component').then(c => c.AuthLayoutComponent),
     children: [
       {
         path: '',
@@ -22,12 +22,12 @@ export const routes: Routes = [
       },
       {
         path: 'login',
-        loadComponent: () => import('./features/auth/login.component').then(c => c.LoginComponent),
+        loadChildren: () => import('./features/auth/login/login.route').then(m => m.default),
         title: 'Login'
       },
       {
         path: 'register',
-        loadComponent: () => import('./features/auth/register.component').then(c => c.RegisterComponent),
+        loadChildren: () => import('./features/auth/register/register.route').then(m => m.default),
         title: 'Register'
       }
     ]
@@ -37,16 +37,16 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [authGuard],
-    loadComponent: () => import('./shared/layouts/main-layout.component').then(c => c.MainLayoutComponent),
+    loadComponent: () => import('./shared/layouts/main-layout/main-layout.component').then(c => c.MainLayoutComponent),
     children: [
       {
         path: 'dashboard',
-        loadComponent: () => import('./features/dashboard/dashboard.component').then(c => c.DashboardComponent),
+        loadChildren: () => import('./features/dashboard/dashboard.route').then(m => m.default),
         title: 'Dashboard'
       },
       {
         path: 'profile',
-        loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),
+        loadChildren: () => import('./features/profile/profile.route').then(m => m.default),
         title: 'Profile'
       }
     ]
