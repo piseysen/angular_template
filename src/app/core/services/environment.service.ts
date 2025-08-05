@@ -1,14 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-
-export interface Environment {
-  production: boolean;
-  environment: string;
-  apiUrl: string;
-  isLoggingEnabled: boolean;
-  enableDebugMode: boolean;
-  appVersion: string;
-}
+import { Environment } from '../models/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -84,7 +76,7 @@ export class EnvironmentService {
    */
   logEnvironmentInfo(): void {
     if (!this.isProduction && this.isLoggingEnabled) {
-      console.group('🌍 Environment Configuration');
+      console.group('Environment Configuration');
       console.log('Environment:', this.environmentName);
       console.log('Version:', this.appVersion);
       console.log('API URL:', this.apiUrl);
