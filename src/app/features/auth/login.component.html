@@ -1,0 +1,84 @@
+<div class="space-y-6">
+  <div class="text-center">
+    <h2 class="text-2xl font-bold text-gray-900">Welcome back</h2>
+    <p class="text-gray-600 mt-2">Sign in to your account</p>
+  </div>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+        placeholder="Enter your email"
+      />
+      <mat-icon matSuffix>email</mat-icon>
+      @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+        <mat-error>Please enter a valid email</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="hidePassword() ? 'password' : 'text'"
+        formControlName="password"
+        placeholder="Enter your password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="togglePasswordVisibility()"
+      >
+        <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+        <mat-error>Password is required</mat-error>
+      }
+    </mat-form-field>
+
+    @if (error()) {
+      <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+        <p class="text-sm text-red-600">{{ error() }}</p>
+      </div>
+    }
+
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+      <p class="text-sm text-blue-600">
+        <strong>Demo credentials:</strong> Any email with password: <code class="bg-blue-100 px-1 rounded">123456</code>
+      </p>
+    </div>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="loginForm.invalid || authService.loading()"
+      class="w-full py-3 relative"
+    >
+      @if (authService.loading()) {
+        <div class="loading-content">
+          <mat-spinner diameter="20" color="accent"></mat-spinner>
+          <span>Signing in...</span>
+        </div>
+      } @else {
+        Sign in
+      }
+    </button>
+  </form>
+
+  <div class="text-center">
+    <p class="text-gray-600">
+      Don't have an account?
+      <a
+        routerLink="/auth/register"
+        class="text-blue-600 hover:text-blue-500 font-medium ml-1"
+      >
+        Sign up
+      </a>
+    </p>
+  </div>
+</div>

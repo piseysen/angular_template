@@ -1,0 +1,47 @@
+// Login Component Styles
+
+.mat-mdc-raised-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+// Spinner customization for better visibility
+::ng-deep {
+  .mat-mdc-progress-spinner {
+    .mdc-circular-progress__determinate-circle,
+    .mdc-circular-progress__indeterminate-circle-graphic {
+      stroke: white !important;
+    }
+  }
+}
+
+// Loading state styling
+.loading-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+// Form field styling improvements
+.mat-mdc-form-field {
+  &.mat-form-field-appearance-outline {
+    .mat-mdc-form-field-outline {
+      transition: all 0.2s ease-in-out;
+    }
+
+    &.mat-focused .mat-mdc-form-field-outline {
+      border-width: 2px;
+    }
+  }
+}
+
+// Error message styling
+.mat-mdc-form-field-error {
+  font-size: 0.75rem;
+  margin-top: 4px;
+}

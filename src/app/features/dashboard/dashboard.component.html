@@ -1,0 +1,184 @@
+<div class="space-y-6">
+    <!-- Welcome Section -->
+    <div class="welcome-section bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 text-white">
+      <div class="flex items-center justify-between relative z-10">
+        <div>
+          <h1 class="text-2xl font-bold">
+            Welcome back, {{ authService.user()?.firstName }}! 👋
+          </h1>
+          <p class="text-blue-100 mt-2">
+            Here's what's happening with your account today.
+          </p>
+        </div>
+        <div class="hidden md:block">
+          <div class="w-20 h-20 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+            <mat-icon class="text-4xl">dashboard</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    @for (card of dashboardCards(); track card.title) {
+      <mat-card class="stats-card p-6 hover:shadow-lg transition-shadow duration-300">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">{{ card.title }}</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ card.value }}</p>
+            <p class="text-gray-400 text-xs mt-1">{{ card.description }}</p>
+          </div>
+          <div [class]="'w-12 h-12 rounded-xl flex items-center justify-center ' + card.color">
+            <mat-icon class="text-white">{{ card.icon }}</mat-icon>
+          </div>
+        </div>
+      </mat-card>
+    }
+  </div>
+
+  <!-- Quick Actions & Recent Activity -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Quick Actions -->
+    <mat-card class="p-6">
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
+        <p class="text-sm text-gray-500 mt-1">Frequently used operations</p>
+      </div>
+      <div class="quick-actions-grid grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Create New Project -->
+        <button
+          mat-raised-button
+          (click)="createProject()"
+          [disabled]="isLoading().createProject"
+          class="action-button h-14 flex items-center justify-center px-6 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 shadow-lg rounded-xl disabled:opacity-70"
+        >
+          @if (isLoading().createProject) {
+            <mat-spinner diameter="20" color="primary"></mat-spinner>
+            <span class="text-sm font-medium ml-2">Creating...</span>
+          } @else {
+            <span class="text-sm font-semibold tracking-wide">Create Project</span>
+          }
+        </button>
+        
+        <!-- View Reports -->
+        <button
+          mat-raised-button
+          (click)="viewReports()"
+          [disabled]="isLoading().viewReports"
+          class="action-button h-14 flex items-center justify-center px-6 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0 shadow-lg rounded-xl disabled:opacity-70"
+        >
+          @if (isLoading().viewReports) {
+            <mat-spinner diameter="20" color="primary"></mat-spinner>
+            <span class="text-sm font-medium ml-2">Loading...</span>
+          } @else {
+            <span class="text-sm font-semibold tracking-wide">View Reports</span>
+          }
+        </button>
+        
+        <!-- Team Management -->
+        <button
+          mat-raised-button
+          (click)="manageTeam()"
+          [disabled]="isLoading().manageTeam"
+          class="action-button h-14 flex items-center justify-center px-6 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white border-0 shadow-lg rounded-xl disabled:opacity-70"
+        >
+          @if (isLoading().manageTeam) {
+            <mat-spinner diameter="20" color="primary"></mat-spinner>
+            <span class="text-sm font-medium ml-2">Opening...</span>
+          } @else {
+            <span class="text-sm font-semibold tracking-wide">Manage Team</span>
+          }
+        </button>
+        
+        <!-- Settings & Preferences -->
+        <button
+          mat-raised-button
+          (click)="openPreferences()"
+          [disabled]="isLoading().preferences"
+          class="action-button h-14 flex items-center justify-center px-6 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 shadow-lg rounded-xl disabled:opacity-70"
+        >
+          @if (isLoading().preferences) {
+            <mat-spinner diameter="20" color="primary"></mat-spinner>
+            <span class="text-sm font-medium ml-2">Loading...</span>
+          } @else {
+            <span class="text-sm font-semibold tracking-wide">Preferences</span>
+          }
+        </button>
+      </div>
+      
+      <!-- Additional Quick Links -->
+      <div class="mt-6 pt-4 border-t border-gray-100">
+        <div class="flex flex-wrap gap-2">
+          <button
+            mat-button
+            (click)="openHelpCenter()"
+            class="text-xs text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200 rounded-lg px-3 py-2"
+          >
+            <mat-icon class="text-sm mr-1">help_outline</mat-icon>
+            Help Center
+          </button>
+          <button
+            mat-button
+            (click)="contactSupport()"
+            class="text-xs text-gray-600 hover:text-green-600 hover:bg-green-50 transition-colors duration-200 rounded-lg px-3 py-2"
+          >
+            <mat-icon class="text-sm mr-1">support_agent</mat-icon>
+            Contact Support
+          </button>
+          <button
+            mat-button
+            (click)="learnMore()"
+            class="text-xs text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors duration-200 rounded-lg px-3 py-2"
+          >
+            <mat-icon class="text-sm mr-1">school</mat-icon>
+            Learn More
+          </button>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Recent Activity -->
+    <mat-card class="p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+      <div class="space-y-4">
+        @for (activity of recentActivities(); track activity.id) {
+          <div class="activity-item flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+              <mat-icon class="text-blue-600 text-sm">{{ activity.icon }}</mat-icon>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-gray-900">{{ activity.action }}</p>
+              <p class="text-xs text-gray-500">{{ formatTime(activity.timestamp) }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- System Status -->
+  <mat-card class="p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">System Status</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="flex items-center space-x-3 p-4 bg-green-50 rounded-lg border border-green-100 hover:bg-green-100 transition-colors duration-200">
+        <div class="status-indicator w-3 h-3 bg-green-500 rounded-full"></div>
+        <div>
+          <p class="font-medium text-green-900">All Systems Operational</p>
+          <p class="text-sm text-green-600">Last updated: {{ getCurrentTime() }}</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 hover:bg-blue-100 transition-colors duration-200">
+        <div class="status-indicator w-3 h-3 bg-blue-500 rounded-full"></div>
+        <div>
+          <p class="font-medium text-blue-900">Database Connected</p>
+          <p class="text-sm text-blue-600">Response time: 45ms</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3 p-4 bg-purple-50 rounded-lg border border-purple-100 hover:bg-purple-100 transition-colors duration-200">
+        <div class="status-indicator w-3 h-3 bg-purple-500 rounded-full"></div>
+        <div>
+          <p class="font-medium text-purple-900">API Active</p>
+          <p class="text-sm text-purple-600">Version: 2.1.0</p>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>

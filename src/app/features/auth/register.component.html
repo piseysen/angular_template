@@ -1,0 +1,127 @@
+<div class="space-y-6">
+  <div class="text-center">
+    <h2 class="text-2xl font-bold text-gray-900">Create account</h2>
+    <p class="text-gray-600 mt-2">Join us today</p>
+  </div>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>First Name</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="firstName"
+          placeholder="First name"
+        />
+        @if (registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched) {
+          <mat-error>First name is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Last Name</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="lastName"
+          placeholder="Last name"
+        />
+        @if (registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched) {
+          <mat-error>Last name is required</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+        placeholder="Enter your email"
+      />
+      <mat-icon matSuffix>email</mat-icon>
+      @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+        <mat-error>Please enter a valid email</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="hidePassword() ? 'password' : 'text'"
+        formControlName="password"
+        placeholder="Create a password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="togglePasswordVisibility()"
+      >
+        <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+        <mat-error>Password must be at least 6 characters</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Confirm Password</mat-label>
+      <input
+        matInput
+        [type]="hideConfirmPassword() ? 'password' : 'text'"
+        formControlName="confirmPassword"
+        placeholder="Confirm your password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="toggleConfirmPasswordVisibility()"
+      >
+        <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
+        <mat-error>Passwords do not match</mat-error>
+      }
+    </mat-form-field>
+
+    @if (error()) {
+      <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+        <p class="text-sm text-red-600">{{ error() }}</p>
+      </div>
+    }
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="registerForm.invalid || authService.loading()"
+      class="w-full py-3 relative"
+    >
+      @if (authService.loading()) {
+        <div class="loading-content">
+          <mat-spinner diameter="20" color="accent"></mat-spinner>
+          <span>Creating account...</span>
+        </div>
+      } @else {
+        Create account
+      }
+    </button>
+  </form>
+
+  <div class="text-center">
+    <p class="text-gray-600">
+      Already have an account?
+      <a
+        routerLink="/auth/login"
+        class="text-blue-600 hover:text-blue-500 font-medium ml-1"
+      >
+        Sign in
+      </a>
+    </p>
+  </div>
+</div>
