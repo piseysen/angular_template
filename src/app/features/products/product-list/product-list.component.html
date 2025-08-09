@@ -1,0 +1,117 @@
+<div class="product-list-container">
+  <div class="header">
+    <h1>Products</h1>
+    <div class="search-section">
+      <input 
+        type="text" 
+        placeholder="Search products..." 
+        [value]="searchQuery()"
+        (input)="onSearchChange($event)"
+        class="search-input"
+      />
+      <select 
+        [value]="selectedCategory()"
+        (change)="onCategoryChange($event)"
+        class="category-select"
+      >
+        <option value="">All Categories</option>
+        @for (category of categoriesResource.value(); track category.slug) {
+          <option [value]="category.slug">{{ category.name }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (productsResource.isLoading()) {
+    <div class="loading">Loading products...</div>
+  }
+
+  @if (productsResource.error()) {
+    <div class="error">
+      Error loading products: {{ productsResource.error()?.message }}
+      <button (click)="productsResource.reload()" class="retry-btn">Retry</button>
+    </div>
+  }
+
+  @if (productsResource.hasValue()) {
+    <div class="products-grid">
+      @for (product of productsResource.value().products; track product.id) {
+        <div class="product-card">
+          <div class="product-image">
+            <img 
+              [src]="product.thumbnail" 
+              [alt]="product.title"
+              (error)="handleImageError($event)"
+            />
+            <div class="product-rating">
+              <span>⭐ {{ product.rating.toFixed(1) }}</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3 class="product-title">{{ product.title }}</h3>
+            <p class="product-brand">{{ product.brand }}</p>
+            <p class="product-description">{{ product.description }}</p>
+            <div class="product-price">
+              <span class="current-price">${{ product.price }}</span>
+              @if (product.discountPercentage > 0) {
+                <span class="discount">-{{ product.discountPercentage.toFixed(0) }}%</span>
+              }
+            </div>
+            <div class="product-stock">
+              @if (product.stock > 0) {
+                <span class="in-stock">{{ product.stock }} in stock</span>
+              } @else {
+                <span class="out-of-stock">Out of stock</span>
+              }
+            </div>
+            <div class="product-actions">
+              <a [routerLink]="['/products', product.id]" class="view-details-btn">
+                View Details
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (productsResource.value().products.length === 0) {
+      <div class="no-results">
+        No products found. Try adjusting your search or category filter.
+      </div>
+    }
+
+    <div class="pagination">
+      <div class="pagination-info">
+        Showing {{ (currentPage() - 1) * pageSize() + 1 }} - 
+        {{ displayEnd() }} 
+        of {{ productsResource.value().total }} products
+      </div>
+      <div class="pagination-controls">
+        <button 
+          (click)="goToPage(currentPage() - 1)"
+          [disabled]="currentPage() <= 1"
+          class="page-btn"
+        >
+          Previous
+        </button>
+        
+        @for (page of visiblePages(); track page) {
+          <button 
+            (click)="goToPage(page)"
+            [class]="'page-btn ' + (page === currentPage() ? 'active' : '')"
+          >
+            {{ page }}
+          </button>
+        }
+        
+        <button 
+          (click)="goToPage(currentPage() + 1)"
+          [disabled]="currentPage() >= totalPages()"
+          class="page-btn"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  }
+</div>

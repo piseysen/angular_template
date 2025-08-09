@@ -22,12 +22,12 @@ export const routes: Routes = [
       },
       {
         path: 'login',
-        loadChildren: () => import('./features/auth/login/login.route').then(m => m.default),
+        loadChildren: () => import('./features/auth/login/login.route').then(m => m.routes),
         title: 'Login'
       },
       {
         path: 'register',
-        loadChildren: () => import('./features/auth/register/register.route').then(m => m.default),
+        loadChildren: () => import('./features/auth/register/register.route').then(m => m.routes),
         title: 'Register'
       }
     ]
@@ -41,13 +41,18 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadChildren: () => import('./features/dashboard/dashboard.route').then(m => m.default),
+        loadChildren: () => import('./features/dashboard/dashboard.route').then(m => m.routes),
         title: 'Dashboard'
       },
       {
         path: 'profile',
-        loadChildren: () => import('./features/profile/profile.route').then(m => m.default),
+        loadChildren: () => import('./features/profile/profile.route').then(m => m.routes),
         title: 'Profile'
+      },
+      {
+        path: 'products',
+        loadChildren: () => import('./features/products/product.routes').then(m => m.routes),
+        title: 'Products'
       }
     ]
   },

@@ -1,0 +1,169 @@
+<div class="product-detail-container">
+  <div class="breadcrumb">
+    <a routerLink="/products" class="breadcrumb-link">Products</a>
+    <span class="breadcrumb-separator">›</span>
+    @if (productResource.hasValue()) {
+      <span>{{ productResource.value().title }}</span>
+    }
+  </div>
+
+  @if (productResource.isLoading()) {
+    <div class="loading">Loading product details...</div>
+  }
+
+  @if (productResource.error()) {
+    <div class="error">
+      Error loading product: {{ productResource.error()?.message }}
+      <button (click)="productResource.reload()" class="retry-btn">Retry</button>
+    </div>
+  }
+
+  @if (productResource.hasValue()) {
+    <div class="product-content">
+      <div class="product-images">
+        <div class="main-image">
+          <img 
+            [src]="selectedImage()" 
+            [alt]="productResource.value().title"
+            (error)="handleImageError($event)"
+          />
+        </div>
+        <div class="image-thumbnails">
+          @for (image of productResource.value().images; track $index) {
+            <img 
+              [src]="image" 
+              [alt]="productResource.value().title"
+              [class]="'thumbnail ' + (selectedImage() === image ? 'active' : '')"
+              (click)="selectedImage.set(image)"
+              (error)="handleImageError($event)"
+            />
+          }
+        </div>
+      </div>
+
+      <div class="product-details">
+        <div class="product-header">
+          <h1>{{ productResource.value().title }}</h1>
+          <div class="product-brand">{{ productResource.value().brand }}</div>
+          <div class="product-rating">
+            <span class="rating-stars">
+              @for (star of getStarArray(productResource.value().rating); track $index) {
+                <span [class]="'star ' + star">★</span>
+              }
+            </span>
+            <span class="rating-value">{{ productResource.value().rating.toFixed(1) }}</span>
+            <span class="rating-count">({{ productResource.value().reviews.length }} reviews)</span>
+          </div>
+        </div>
+
+        <div class="product-price">
+          <div class="current-price">${{ productResource.value().price }}</div>
+          @if (productResource.value().discountPercentage > 0) {
+            <div class="original-price">
+              ${{ getOriginalPrice() }}
+            </div>
+            <div class="discount-badge">
+              {{ productResource.value().discountPercentage.toFixed(0) }}% OFF
+            </div>
+          }
+        </div>
+
+        <div class="product-info">
+          <p class="description">{{ productResource.value().description }}</p>
+          
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Category:</span>
+              <span class="value">{{ productResource.value().category | titlecase }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Stock:</span>
+              <span [class]="'value ' + getStockClass()">
+                {{ getStockText() }}
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="label">SKU:</span>
+              <span class="value">{{ productResource.value().sku }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Weight:</span>
+              <span class="value">{{ productResource.value().weight }} kg</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Dimensions:</span>
+              <span class="value">
+                {{ productResource.value().dimensions.width }} × 
+                {{ productResource.value().dimensions.height }} × 
+                {{ productResource.value().dimensions.depth }} cm
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="label">Warranty:</span>
+              <span class="value">{{ productResource.value().warrantyInformation }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Shipping:</span>
+              <span class="value">{{ productResource.value().shippingInformation }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Return Policy:</span>
+              <span class="value">{{ productResource.value().returnPolicy }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Min. Order Qty:</span>
+              <span class="value">{{ productResource.value().minimumOrderQuantity }}</span>
+            </div>
+          </div>
+
+          @if (productResource.value().tags.length > 0) {
+            <div class="product-tags">
+              <span class="tags-label">Tags:</span>
+              @for (tag of productResource.value().tags; track tag) {
+                <span class="tag">{{ tag }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="product-actions">
+          <button 
+            class="add-to-cart-btn"
+            [disabled]="productResource.value().stock === 0"
+          >
+            @if (productResource.value().stock === 0) {
+              Out of Stock
+            } @else {
+              Add to Cart
+            }
+          </button>
+          <button class="wishlist-btn">
+            ♡ Add to Wishlist
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (productResource.value().reviews.length > 0) {
+      <div class="reviews-section">
+        <h2>Customer Reviews</h2>
+        <div class="reviews-list">
+          @for (review of productResource.value().reviews; track review.reviewerEmail) {
+            <div class="review-item">
+              <div class="review-header">
+                <div class="reviewer-name">{{ review.reviewerName }}</div>
+                <div class="review-rating">
+                  @for (star of getStarArray(review.rating); track $index) {
+                    <span [class]="'star ' + star">★</span>
+                  }
+                </div>
+                <div class="review-date">{{ formatDate(review.date) }}</div>
+              </div>
+              <div class="review-comment">{{ review.comment }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+</div>

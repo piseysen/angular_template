@@ -2,7 +2,7 @@
 export const environment = {
   production: false,
   environment: 'development',
-  apiUrl: 'http://localhost:3000/api',
+  apiUrl: 'https://dummyjson.com/products',
   isLoggingEnabled: false,
   enableDebugMode: false,
   appVersion: '1.0.0',
