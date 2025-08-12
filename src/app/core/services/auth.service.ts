@@ -76,6 +76,20 @@ export class AuthService {
     return of({ success: true }).pipe(delay(500));
   }
 
+  /**
+   * Get authentication token for API requests
+   * In a real app, this would return a JWT token
+   */
+  getToken(): string | null {
+    const user = this.currentUser();
+    if (user) {
+      // For demo purposes, return a mock JWT token
+      // In real apps, this would be stored separately and refreshed
+      return `mock-jwt-token-${user.id}`;
+    }
+    return null;
+  }
+
   private performLogin(credentials: LoginCredentials): { success: boolean; error?: string } {
     // Dummy validation - accept any email with password "123456"
     if (credentials.password === '123456') {
