@@ -1,0 +1,382 @@
+.create-product-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+
+  // Header with Breadcrumb
+  .page-header {
+    margin-bottom: 32px;
+    
+    .breadcrumb-container {
+      margin-bottom: 24px;
+      
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        font-size: 0.875rem;
+        color: #666;
+        
+        .breadcrumb-item {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          text-decoration: none;
+          color: #666;
+          padding: 6px 12px;
+          border-radius: 6px;
+          transition: all 0.2s ease;
+          
+          &:hover:not(.current) {
+            background: rgba(25, 118, 210, 0.08);
+            color: #1976d2;
+            
+            mat-icon {
+              color: #1976d2;
+            }
+          }
+          
+          &.current {
+            color: #1976d2;
+            font-weight: 500;
+            background: rgba(25, 118, 210, 0.1);
+            
+            mat-icon {
+              color: #1976d2;
+            }
+          }
+          
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            color: inherit;
+          }
+        }
+        
+        .breadcrumb-separator {
+          font-size: 16px;
+          color: #ccc;
+          margin: 0 4px;
+        }
+      }
+    }
+    
+    .page-title-section {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      
+      .title-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        flex: 1;
+        
+        .title-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 56px;
+          height: 56px;
+          background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+          
+          mat-icon {
+            color: white;
+            font-size: 28px;
+            width: 28px;
+            height: 28px;
+          }
+        }
+        
+        .title-text {
+          flex: 1;
+          
+          h1 {
+            font-size: 2.25rem;
+            font-weight: 400;
+            color: #333;
+            margin: 0 0 8px 0;
+            line-height: 1.2;
+          }
+          
+          p {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
+            line-height: 1.4;
+          }
+        }
+      }
+      
+      .header-actions {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        
+        .back-button {
+          height: 40px;
+          
+          mat-icon {
+            margin-right: 8px;
+            font-size: 18px;
+          }
+        }
+      }
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: stretch;
+        
+        .title-content {
+          .title-text {
+            h1 {
+              font-size: 1.75rem;
+            }
+          }
+        }
+        
+        .header-actions {
+          justify-content: flex-start;
+          
+          .back-button {
+            width: auto;
+          }
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .title-content {
+          flex-direction: column;
+          text-align: center;
+          
+          .title-icon {
+            align-self: center;
+          }
+        }
+        
+        .header-actions {
+          justify-content: center;
+          
+          .back-button {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.create-product-form {
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+
+    .form-section {
+      &.full-width {
+        grid-column: 1 / -1;
+      }
+
+      mat-card-header {
+        margin-bottom: 16px;
+
+        mat-card-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 1.2rem;
+          font-weight: 500;
+
+          mat-icon {
+            color: #1976d2;
+          }
+        }
+      }
+
+      mat-card-content {
+        padding-top: 0;
+      }
+    }
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .sku-field-container {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+
+    .sku-field {
+      flex: 1;
+    }
+
+    .generate-sku-btn {
+      margin-top: 8px;
+      min-width: 120px;
+      height: 56px;
+      
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .tags-section {
+    margin-bottom: 24px;
+
+    .tags-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.6);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    mat-chip-grid {
+      margin-bottom: 8px;
+    }
+
+    .tag-input {
+      border: none;
+      outline: none;
+      padding: 8px;
+      font-size: 14px;
+      width: 200px;
+
+      &::placeholder {
+        color: rgba(0, 0, 0, 0.4);
+      }
+    }
+  }
+
+  .checkbox-section {
+    margin-top: 24px;
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    .checkbox-description {
+      font-size: 0.875rem;
+      color: rgba(0, 0, 0, 0.6);
+      margin-top: 4px;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    padding: 24px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+    button {
+      min-width: 140px;
+      height: 48px;
+      
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      flex-direction: column-reverse;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Progress bar styling
+mat-progress-bar {
+  margin-bottom: 24px;
+  border-radius: 2px;
+}
+
+// Form field improvements
+mat-form-field {
+  margin-bottom: 16px;
+
+  .mat-mdc-form-field-subscript-wrapper {
+    margin-top: 4px;
+  }
+}
+
+// Card improvements
+mat-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: visible;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease;
+  }
+}
+
+// Chip grid improvements
+mat-chip-grid {
+  min-height: 48px;
+  padding: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  background: #fff;
+
+  &:focus-within {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+  }
+}
+
+// Responsive improvements
+@media (max-width: 768px) {
+  .create-product-container {
+    padding: 16px;
+
+    .create-product-header {
+      margin-bottom: 24px;
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  }
+
+  .sku-field-container {
+    flex-direction: column;
+
+    .generate-sku-btn {
+      width: 100%;
+      margin-top: 0;
+    }
+  }
+}
+
+// Success and error snackbar styles
+.success-snackbar {
+  --mdc-snackbar-container-color: #4caf50;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: #f44336;
+  --mdc-snackbar-supporting-text-color: white;
+}

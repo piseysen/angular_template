@@ -700,3 +700,247 @@
   margin: 8px 16px !important;
   opacity: 0.5;
 }
+
+// Collapsible Menu Groups
+.nav-group {
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+
+  &.collapsed .nav-list {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  &:not(.collapsed) .nav-list {
+    max-height: 1000px;
+    opacity: 1;
+    transition: all 0.3s ease;
+  }
+}
+
+.nav-group-header {
+  &.clickable {
+    cursor: pointer;
+    user-select: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin: 0 8px 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--menu-hover);
+    }
+  }
+
+  .group-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .group-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--nav-group-header);
+  }
+
+  .group-icon {
+    font-size: 18px;
+    color: var(--sidebar-accent);
+  }
+
+  .group-icon-collapsed {
+    color: var(--sidebar-accent);
+    font-size: 20px;
+  }
+
+  .expand-icon {
+    transition: transform 0.2s ease;
+    font-size: 18px;
+    color: var(--nav-group-header);
+
+    &.rotated {
+      transform: rotate(-180deg);
+    }
+  }
+}
+
+.search-group {
+  margin-bottom: 8px;
+  
+  .nav-list {
+    padding-top: 0;
+    padding-bottom: 8px;
+  }
+}
+
+// Enhanced Menu Item Styles
+.menu-item-container {
+  position: relative;
+}
+
+.nav-item {
+  &.has-children {
+    cursor: pointer;
+
+    &:not([routerLink]) {
+      .mdc-list-item__content {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &.expanded {
+    background: var(--menu-active);
+  }
+}
+
+// Improved Icon and Badge Container
+.nav-item-icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+
+  .nav-item-icon {
+    color: inherit;
+    font-size: 20px;
+  }
+
+  .icon-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: white;
+    
+    &.number {
+      background: #f44336;
+      padding: 0 4px;
+    }
+    
+    &.text {
+      background: #ff9800;
+      padding: 0 6px;
+      font-size: 8px;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+.nav-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  
+  .nav-item-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+}
+
+.nav-item-label {
+  flex: 1;
+}
+
+.item-badge {
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 10px;
+  min-width: 20px;
+  height: 20px;
+  
+  &.number {
+    background: #f44336;
+    color: white;
+    padding: 0 6px;
+  }
+  
+  &.text {
+    background: #ff9800;
+    color: white;
+    padding: 0 8px;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+  }
+}
+
+.expand-arrow {
+  transition: transform 0.2s ease;
+  font-size: 18px;
+  color: var(--sidebar-text);
+  margin-left: 8px;
+  opacity: 0.7;
+
+  &.rotated {
+    transform: rotate(-180deg);
+  }
+}
+
+// Simplified Sub-menu Styles
+.sub-menu {
+  margin-left: 24px;
+  border-left: 2px solid var(--sidebar-border);
+  border-radius: 0 8px 8px 0;
+  background: rgba(0, 0, 0, 0.02);
+  animation: slideDown 0.3s ease;
+  overflow: hidden;
+
+  .sub-item {
+    min-height: 44px !important;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    
+    .sub-item-icon {
+      font-size: 18px;
+      color: var(--sidebar-text);
+      opacity: 0.8;
+      transition: all 0.2s ease;
+    }
+    
+    &:hover:not(.active) {
+      background: var(--menu-hover);
+      transform: translateX(2px);
+    }
+
+    &.active {
+      background: var(--menu-active);
+      border-right: 3px solid var(--sidebar-accent);
+      
+      .sub-item-icon {
+        color: var(--sidebar-accent);
+        opacity: 1;
+      }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 200px;
+    opacity: 1;
+  }
+}

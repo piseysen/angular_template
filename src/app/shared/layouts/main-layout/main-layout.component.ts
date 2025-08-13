@@ -18,6 +18,30 @@ import { EnvironmentIndicatorComponent } from '../../components/environment-indi
 import { EnvironmentService } from '../../../core/services/environment.service';
 import { filter } from 'rxjs';
 
+// Menu item types
+interface BaseMenuItem {
+  icon: string;
+  label: string;
+  route: string;
+  badge?: string | number | null;
+  tooltip: string;
+  type: 'page' | 'action';
+}
+
+interface MenuItemWithChildren extends BaseMenuItem {
+  children?: BaseMenuItem[];
+}
+
+type MenuItem = BaseMenuItem | MenuItemWithChildren;
+
+interface MenuGroup {
+  id: string;
+  title: string;
+  icon: string;
+  collapsed: boolean;
+  items: MenuItem[];
+}
+
 @Component({
   selector: 'app-main-layout',
   templateUrl: './main-layout.component.html',
@@ -54,6 +78,9 @@ export class MainLayoutComponent {
   protected readonly isSidenavCollapsed = signal(false);
   protected readonly sidenavMode = signal<'side' | 'over'>('side');
   protected readonly currentRoute = signal('');
+  
+  // Collapsible menu state
+  protected readonly collapsedMenuGroups = signal<Set<string>>(new Set());
 
   // Dynamic content margin based on sidebar state
   contentMargin = computed(() => {
@@ -76,10 +103,30 @@ export class MainLayoutComponent {
     const current = this.currentRoute();
     const segments = current.split('/').filter(s => s);
     
-    // Find main menu item
-    const mainMenuItem = this.menuItems.find(item => 
-      current === item.route || current.startsWith(item.route + '/')
-    );
+    // Find main menu item in all groups
+    let mainMenuItem: BaseMenuItem | undefined;
+    for (const group of this.menuGroups) {
+      const found = group.items.find((item: MenuItem) => {
+        // Check if item has children
+        if ('children' in item && item.children) {
+          // Check parent route
+          if (current === item.route || current.startsWith(item.route + '/')) {
+            return true;
+          }
+          // Check children routes
+          return item.children.some((child: BaseMenuItem) =>
+            current === child.route || current.startsWith(child.route + '/')
+          );
+        } else {
+          return current === item.route || current.startsWith(item.route + '/');
+        }
+      });
+      if (found) {
+        mainMenuItem = found as BaseMenuItem;
+        break;
+      }
+    }
+
     const userMenuItem = this.userMenuItems.find(item => 
       current === item.route || current.startsWith(item.route + '/')
     );
@@ -105,51 +152,148 @@ export class MainLayoutComponent {
     return 'Dashboard';
   });
 
-  // Menu items configuration
-  menuItems = [
+  // Menu items configuration with groups
+  menuGroups = [
     {
+      id: 'main',
+      title: 'Main Navigation',
       icon: 'dashboard',
-      label: 'Dashboard',
-      route: '/dashboard',
-      badge: null,
-      tooltip: 'Main Dashboard'
+      collapsed: false,
+      items: [
+        {
+          icon: 'dashboard',
+          label: 'Dashboard',
+          route: '/dashboard',
+          badge: null,
+          tooltip: 'Main Dashboard',
+          type: 'page' as const
+        },
+        {
+          icon: 'analytics',
+          label: 'Analytics',
+          route: '/analytics',
+          badge: 'new',
+          tooltip: 'View Analytics',
+          type: 'page' as const
+        }
+      ]
     },
     {
-      icon: 'analytics',
-      label: 'Analytics',
-      route: '/analytics',
-      badge: 'new',
-      tooltip: 'View Analytics'
+      id: 'management',
+      title: 'Management',
+      icon: 'business_center',
+      collapsed: false,
+      items: [
+        {
+          icon: 'inventory_2',
+          label: 'Products',
+          route: '/products',
+          badge: null,
+          tooltip: 'Manage Products',
+          type: 'page' as const,
+          children: [
+            {
+              icon: 'add_box',
+              label: 'Add Product',
+              route: '/products/new',
+              tooltip: 'Add New Product',
+              type: 'action' as const
+            },
+            {
+              icon: 'list',
+              label: 'Product List',
+              route: '/products/list',
+              tooltip: 'View All Products',
+              type: 'page' as const
+            }
+          ]
+        },
+        {
+          icon: 'people',
+          label: 'Users',
+          route: '/users',
+          badge: 5,
+          tooltip: 'User Management',
+          type: 'page' as const,
+          children: [
+            {
+              icon: 'person_add',
+              label: 'Add User',
+              route: '/users/new',
+              tooltip: 'Add New User',
+              type: 'action' as const
+            },
+            {
+              icon: 'group',
+              label: 'User Groups',
+              route: '/users/groups',
+              tooltip: 'Manage User Groups',
+              type: 'page' as const
+            }
+          ]
+        },
+        {
+          icon: 'receipt_long',
+          label: 'Orders',
+          route: '/orders',
+          badge: 12,
+          tooltip: 'Order Management',
+          type: 'page' as const
+        }
+      ]
     },
     {
-      icon: 'inventory_2',
-      label: 'Products',
-      route: '/products',
-      badge: null,
-      tooltip: 'Manage Products'
-    },
-    {
-      icon: 'people',
-      label: 'Users',
-      route: '/users',
-      badge: 5,
-      tooltip: 'User Management'
-    },
-    {
-      icon: 'receipt_long',
-      label: 'Orders',
-      route: '/orders',
-      badge: 12,
-      tooltip: 'Order Management'
-    },
-    {
-      icon: 'bar_chart',
-      label: 'Reports',
-      route: '/reports',
-      badge: null,
-      tooltip: 'Generate Reports'
+      id: 'reports',
+      title: 'Reports & Analytics',
+      icon: 'assessment',
+      collapsed: true, // Start collapsed
+      items: [
+        {
+          icon: 'bar_chart',
+          label: 'Reports',
+          route: '/reports',
+          badge: null,
+          tooltip: 'Generate Reports',
+          type: 'page' as const
+        },
+        {
+          icon: 'trending_up',
+          label: 'Insights',
+          route: '/insights',
+          badge: null,
+          tooltip: 'Business Insights',
+          type: 'page' as const
+        },
+        {
+          icon: 'pie_chart',
+          label: 'Statistics',
+          route: '/statistics',
+          badge: null,
+          tooltip: 'View Statistics',
+          type: 'page' as const
+        }
+      ]
     }
   ];
+
+  // Legacy flat menuItems for backward compatibility
+  get menuItems(): BaseMenuItem[] {
+    const flatItems: BaseMenuItem[] = [];
+    for (const group of this.menuGroups) {
+      for (const item of group.items) {
+        if ('children' in item && item.children) {
+          flatItems.push(item as BaseMenuItem);
+          flatItems.push(...item.children);
+        } else {
+          flatItems.push(item as BaseMenuItem);
+        }
+      }
+    }
+    return flatItems;
+  }
+
+  // Expanded menu items (for collapsible sub-items)
+  protected readonly expandedMenuItems = signal<Set<string>>(new Set());
 
   protected readonly userMenuItems = [
     {
@@ -217,6 +361,47 @@ export class MainLayoutComponent {
       disableClose: false,
       autoFocus: true
     });
+  }
+
+  // Menu group collapse/expand methods
+  protected toggleMenuGroup(groupId: string): void {
+    const group = this.menuGroups.find(g => g.id === groupId);
+    if (group) {
+      group.collapsed = !group.collapsed;
+    }
+  }
+
+  protected isMenuGroupCollapsed(groupId: string): boolean {
+    const group = this.menuGroups.find(g => g.id === groupId);
+    return group ? group.collapsed : false;
+  }
+
+  // Menu item expand/collapse methods (for sub-items)
+  protected toggleMenuItem(route: string): void {
+    this.expandedMenuItems.update(expanded => {
+      const newSet = new Set(expanded);
+      if (newSet.has(route)) {
+        newSet.delete(route);
+      } else {
+        newSet.add(route);
+      }
+      return newSet;
+    });
+  }
+
+  protected isMenuItemExpanded(route: string): boolean {
+    return this.expandedMenuItems().has(route);
+  }
+
+  protected hasChildren(item: MenuItem): boolean {
+    return 'children' in item && !!item.children && item.children.length > 0;
+  }
+
+  protected getChildrenItems(item: MenuItem): BaseMenuItem[] {
+    if ('children' in item && item.children) {
+      return item.children;
+    }
+    return [];
   }
 
   @HostListener('window:keydown', ['$event'])

@@ -1,0 +1,250 @@
+<div class="create-product-container">
+  <!-- Header with Breadcrumb -->
+  <div class="page-header">
+    <div class="breadcrumb-container">
+      <nav class="breadcrumb">
+        <a routerLink="/dashboard" class="breadcrumb-item">
+          <mat-icon>home</mat-icon>
+          Dashboard
+        </a>
+        <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+        <a routerLink="/products/list" class="breadcrumb-item">
+          <mat-icon>inventory_2</mat-icon>
+          Products
+        </a>
+        <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+        <span class="breadcrumb-item current">
+          <mat-icon>add_box</mat-icon>
+          Create Product
+        </span>
+      </nav>
+    </div>
+    
+    <div class="page-title-section">
+      <div class="title-content">
+        <div class="title-icon">
+          <mat-icon>add_shopping_cart</mat-icon>
+        </div>
+        <div class="title-text">
+          <h1>Create New Product</h1>
+          <p>Add a new product to your inventory and start selling</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button 
+          mat-stroked-button 
+          color="primary" 
+          routerLink="/products/list"
+          class="back-button"
+        >
+          <mat-icon>arrow_back</mat-icon>
+          Back to Products
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="create-product-form">
+    <!-- Progress Bar -->
+    @if (isLoading()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    <div class="form-grid">
+      <!-- Basic Information Card -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>info</mat-icon>
+            Basic Information
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- Product Name -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Product Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter product name">
+            <mat-icon matSuffix>label</mat-icon>
+            @if (productForm.get('name')?.invalid && productForm.get('name')?.touched) {
+              <mat-error>{{ getErrorMessage('name') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Description -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea 
+              matInput 
+              formControlName="description" 
+              rows="4" 
+              placeholder="Describe your product"
+            ></textarea>
+            <mat-icon matSuffix>description</mat-icon>
+            @if (productForm.get('description')?.invalid && productForm.get('description')?.touched) {
+              <mat-error>{{ getErrorMessage('description') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Category -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category">
+              @for (category of categories; track category) {
+                <mat-option [value]="category">{{ category }}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matSuffix>category</mat-icon>
+            @if (productForm.get('category')?.invalid && productForm.get('category')?.touched) {
+              <mat-error>{{ getErrorMessage('category') }}</mat-error>
+            }
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Pricing & Inventory Card -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>attach_money</mat-icon>
+            Pricing & Inventory
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- Price -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Price</mat-label>
+            <input matInput type="number" formControlName="price" placeholder="0.00" step="0.01">
+            <span matTextPrefix>$&nbsp;</span>
+            <mat-icon matSuffix>monetization_on</mat-icon>
+            @if (productForm.get('price')?.invalid && productForm.get('price')?.touched) {
+              <mat-error>{{ getErrorMessage('price') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- SKU -->
+          <div class="sku-field-container">
+            <mat-form-field appearance="outline" class="sku-field">
+              <mat-label>SKU (Stock Keeping Unit)</mat-label>
+              <input matInput formControlName="sku" placeholder="e.g., PRD-ELE-001">
+              <mat-icon matSuffix>qr_code</mat-icon>
+              @if (productForm.get('sku')?.invalid && productForm.get('sku')?.touched) {
+                <mat-error>{{ getErrorMessage('sku') }}</mat-error>
+              }
+            </mat-form-field>
+            <button 
+              type="button" 
+              mat-stroked-button 
+              color="primary" 
+              class="generate-sku-btn"
+              (click)="generateSKU()"
+              [disabled]="!productForm.get('name')?.value || !productForm.get('category')?.value"
+            >
+              <mat-icon>auto_fix_high</mat-icon>
+              Generate
+            </button>
+          </div>
+
+          <!-- Stock Quantity -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Stock Quantity</mat-label>
+            <input matInput type="number" formControlName="stockQuantity" placeholder="0" min="0">
+            <mat-icon matSuffix>inventory</mat-icon>
+            @if (productForm.get('stockQuantity')?.invalid && productForm.get('stockQuantity')?.touched) {
+              <mat-error>{{ getErrorMessage('stockQuantity') }}</mat-error>
+            }
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Additional Details Card -->
+      <mat-card class="form-section full-width">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>tune</mat-icon>
+            Additional Details
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- Image URL -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Image URL (Optional)</mat-label>
+            <input matInput formControlName="imageUrl" placeholder="https://example.com/image.jpg">
+            <mat-icon matSuffix>image</mat-icon>
+            @if (productForm.get('imageUrl')?.invalid && productForm.get('imageUrl')?.touched) {
+              <mat-error>{{ getErrorMessage('imageUrl') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Tags -->
+          <div class="tags-section">
+            <label class="tags-label">Tags</label>
+            <mat-chip-grid #chipGrid aria-label="Product tags">
+              @for (tag of tags(); track tag) {
+                <mat-chip-row (removed)="removeTag(tag)">
+                  {{ tag }}
+                  <button matChipRemove aria-label="Remove tag">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+              }
+              <input
+                placeholder="Add tag and press Enter..."
+                [matChipInputFor]="chipGrid"
+                [matChipInputSeparatorKeyCodes]="[13]"
+                (matChipInputTokenEnd)="addTag($event)"
+                class="tag-input"
+              />
+            </mat-chip-grid>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Active Status -->
+          <div class="checkbox-section">
+            <mat-checkbox formControlName="isActive">
+              <span class="checkbox-label">
+                <mat-icon>visibility</mat-icon>
+                Active Product
+              </span>
+              <div class="checkbox-description">
+                Product will be visible to customers when active
+              </div>
+            </mat-checkbox>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button 
+        type="button" 
+        mat-stroked-button 
+        color="warn" 
+        (click)="onCancel()"
+        [disabled]="isLoading()"
+      >
+        <mat-icon>cancel</mat-icon>
+        Cancel
+      </button>
+      <button 
+        type="submit" 
+        mat-raised-button 
+        color="primary"
+        [disabled]="productForm.invalid || isLoading()"
+      >
+        @if (isLoading()) {
+          <ng-container>
+            <mat-icon>hourglass_empty</mat-icon>
+            Creating...
+          </ng-container>
+        } @else {
+          <ng-container>
+            <mat-icon>save</mat-icon>
+            Create Product
+          </ng-container>
+        }
+      </button>
+    </div>
+  </form>
+</div>

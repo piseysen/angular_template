@@ -45,15 +45,9 @@
 
       <!-- Navigation Menu -->
       <div class="navigation-section">
-        <div class="nav-group">
-          <div class="nav-group-header" [class.collapsed]="isSidenavCollapsed() && !isHandset()">
-            @if (!isSidenavCollapsed() || isHandset()) {
-              <span>Main Menu</span>
-            }
-          </div>
-          
+        <!-- Search Item -->
+        <div class="nav-group search-group">
           <mat-nav-list class="nav-list">
-            <!-- Search Item -->
             <mat-list-item 
               class="nav-item search-nav-item" 
               (click)="openSearch()"
@@ -68,36 +62,122 @@
                 </ng-container>
               }
             </mat-list-item>
-            
-            <mat-divider class="nav-divider search-divider"></mat-divider>
-            
-            @for (item of menuItems; track item.route) {
-              <mat-list-item 
-                class="nav-item" 
-                [class.active]="isMenuItemActive()(item.route)"
-                [routerLink]="item.route" 
-                routerLinkActive="active"
-                #rla="routerLinkActive"
-                [matTooltip]="(isSidenavCollapsed() && !isHandset()) ? item.tooltip : ''"
-                matTooltipPosition="right"
-                (click)="closeSidenav()"
-              >
-                <mat-icon matListItemIcon [matBadge]="item.badge" [matBadgeHidden]="!item.badge" 
-                          matBadgeColor="accent" matBadgeSize="small">
-                  {{ item.icon }}
-                </mat-icon>
-                @if (!isSidenavCollapsed() || isHandset()) {
-                  <ng-container matListItemTitle>{{ item.label }}</ng-container>
-                }
-                @if (item.badge && typeof item.badge === 'number' && (!isSidenavCollapsed() || isHandset())) {
-                  <span class="item-badge">{{ item.badge }}</span>
-                } @else if (item.badge === 'new' && (!isSidenavCollapsed() || isHandset())) {
-                  <span class="item-badge new">NEW</span>
-                }
-              </mat-list-item>
-            }
           </mat-nav-list>
         </div>
+
+        <!-- Menu Groups -->
+        @for (group of menuGroups; track group.id) {
+          <div class="nav-group" [class.collapsed]="isMenuGroupCollapsed(group.id)">
+            <!-- Group Header -->
+            <div 
+              class="nav-group-header clickable" 
+              [class.collapsed]="isSidenavCollapsed() && !isHandset()"
+              (click)="toggleMenuGroup(group.id)"
+            >
+              @if (!isSidenavCollapsed() || isHandset()) {
+                <div class="group-header-content">
+                  <div class="group-title">
+                    <mat-icon class="group-icon">{{ group.icon }}</mat-icon>
+                    <span>{{ group.title }}</span>
+                  </div>
+                  <mat-icon class="expand-icon" [class.rotated]="!isMenuGroupCollapsed(group.id)">
+                    expand_more
+                  </mat-icon>
+                </div>
+              } @else {
+                <mat-icon 
+                  [matTooltip]="group.title" 
+                  matTooltipPosition="right" 
+                  class="group-icon-collapsed"
+                >
+                  {{ group.icon }}
+                </mat-icon>
+              }
+            </div>
+            
+            <!-- Group Items -->
+            @if (!isMenuGroupCollapsed(group.id) || (isSidenavCollapsed() && !isHandset())) {
+              <mat-nav-list class="nav-list">
+                @for (item of group.items; track item.route) {
+                  <!-- Parent Menu Item -->
+                  <div class="menu-item-container">
+                    <mat-list-item 
+                      class="nav-item" 
+                      [class.active]="isMenuItemActive()(item.route)"
+                      [class.has-children]="hasChildren(item)"
+                      [class.expanded]="hasChildren(item) && isMenuItemExpanded(item.route)"
+                      [routerLink]="!hasChildren(item) ? item.route : null"
+                      [routerLinkActive]="!hasChildren(item) ? 'active' : ''"
+                      [matTooltip]="(isSidenavCollapsed() && !isHandset()) ? item.tooltip : ''"
+                      matTooltipPosition="right"
+                      (click)="hasChildren(item) ? toggleMenuItem(item.route) : closeSidenav()"
+                    >
+                      <!-- Icon with better badge positioning -->
+                      <div class="nav-item-icon-container" matListItemIcon>
+                        <mat-icon class="nav-item-icon">{{ item.icon }}</mat-icon>
+                        @if (item.badge && (isSidenavCollapsed() && !isHandset())) {
+                          <span 
+                            class="icon-badge" 
+                            [class.number]="typeof item.badge === 'number'"
+                            [class.text]="typeof item.badge === 'string'"
+                          >
+                            {{ item.badge }}
+                          </span>
+                        }
+                      </div>
+                      
+                      @if (!isSidenavCollapsed() || isHandset()) {
+                        <ng-container matListItemTitle>
+                          <div class="nav-item-content">
+                            <div class="nav-item-main">
+                              <span class="nav-item-label">{{ item.label }}</span>
+                              @if (item.badge) {
+                                <span 
+                                  class="item-badge" 
+                                  [class.number]="typeof item.badge === 'number'"
+                                  [class.text]="typeof item.badge === 'string'"
+                                >
+                                  {{ item.badge }}
+                                </span>
+                              }
+                            </div>
+                            @if (hasChildren(item)) {
+                              <mat-icon class="expand-arrow" [class.rotated]="isMenuItemExpanded(item.route)">
+                                expand_more
+                              </mat-icon>
+                            }
+                          </div>
+                        </ng-container>
+                      }
+                    </mat-list-item>
+
+                    <!-- Simplified Children Items -->
+                    @if (hasChildren(item) && isMenuItemExpanded(item.route) && (!isSidenavCollapsed() || isHandset())) {
+                      <div class="sub-menu">
+                        @for (child of getChildrenItems(item); track child.route) {
+                          <mat-list-item 
+                            class="nav-item sub-item"
+                            [class.active]="isMenuItemActive()(child.route)"
+                            [routerLink]="child.route" 
+                            routerLinkActive="active"
+                            [matTooltip]="child.tooltip"
+                            matTooltipPosition="right"
+                            (click)="closeSidenav()"
+                          >
+                            <mat-icon matListItemIcon class="sub-item-icon">
+                              {{ child.icon }}
+                            </mat-icon>
+                            <span matListItemTitle>{{ child.label }}</span>
+                          </mat-list-item>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              </mat-nav-list>
+            }
+          </div>
+        }
 
         <!-- User Section -->
         <div class="nav-group user-section">
