@@ -6,7 +6,6 @@
   
   <!-- Main Layout -->
   <mat-sidenav-container class="sidenav-container">
-    <!-- Enhanced Sidenav -->
     <mat-sidenav
       #sidenav
       [mode]="sidenavMode()"
@@ -14,8 +13,7 @@
       class="enhanced-sidenav"
       [class.collapsed]="isSidenavCollapsed() && !isHandset()"
       [fixedInViewport]="!isHandset()"
-      [fixedTopGap]="0"
-    >
+      [fixedTopGap]="0">
       <!-- Sidenav Header -->
       <div class="sidenav-header">
         <div class="logo-section" [class.collapsed]="isSidenavCollapsed() && !isHandset()">
@@ -101,8 +99,7 @@
                 #rlaUser="routerLinkActive"
                 [matTooltip]="(isSidenavCollapsed() && !isHandset()) ? item.label : ''"
                 matTooltipPosition="right"
-                (click)="closeSidenav()"
-              >
+                (click)="closeSidenav()">
                 <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
                 @if (!isSidenavCollapsed() || isHandset()) {
                   <ng-container matListItemTitle>{{ item.label }}</ng-container>
@@ -232,7 +229,24 @@
                 <div class="user-email">{{ authService.user()?.email }}</div>
               </div>
             </div>
-          
+            
+            <mat-divider></mat-divider>
+            
+            <button mat-menu-item [routerLink]="['/profile']">
+              <mat-icon>person</mat-icon>
+              <span>My Profile</span>
+            </button>
+            
+            <button mat-menu-item [routerLink]="['/settings']">
+              <mat-icon>settings</mat-icon>
+              <span>Settings</span>
+            </button>
+            
+            <button mat-menu-item>
+              <mat-icon>help</mat-icon>
+              <span>Help & Support</span>
+            </button>
+            
             <mat-divider></mat-divider>
             
             <button mat-menu-item (click)="logout()" class="logout-menu-item">
