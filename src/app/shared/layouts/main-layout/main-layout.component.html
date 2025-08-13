@@ -10,7 +10,7 @@
       #sidenav
       [mode]="sidenavMode()"
       [opened]="!isHandset()"
-      class="enhanced-sidenav"
+      class="custom-sidenav"
       [class.collapsed]="isSidenavCollapsed() && !isHandset()"
       [fixedInViewport]="!isHandset()"
       [fixedTopGap]="0">
@@ -53,6 +53,24 @@
           </div>
           
           <mat-nav-list class="nav-list">
+            <!-- Search Item -->
+            <mat-list-item 
+              class="nav-item search-nav-item" 
+              (click)="openSearch()"
+              [matTooltip]="(isSidenavCollapsed() && !isHandset()) ? 'Search (Ctrl+K)' : ''"
+              matTooltipPosition="right"
+            >
+              <mat-icon matListItemIcon>search</mat-icon>
+              @if (!isSidenavCollapsed() || isHandset()) {
+                <ng-container matListItemTitle>
+                  <span>Search</span>
+                  <span class="search-shortcut">⌘K</span>
+                </ng-container>
+              }
+            </mat-list-item>
+            
+            <mat-divider class="nav-divider search-divider"></mat-divider>
+            
             @for (item of menuItems; track item.route) {
               <mat-list-item 
                 class="nav-item" 
@@ -146,8 +164,8 @@
 
     <!-- Main Content -->
     <mat-sidenav-content class="main-content" [style.margin-left]="contentMargin()">
-      <!-- Enhanced Toolbar -->
-      <mat-toolbar class="enhanced-toolbar">
+      <!-- Toolbar -->
+      <mat-toolbar class="custom-toolbar">
         <div class="toolbar-left">
           @if (isHandset()) {
             <button
@@ -193,7 +211,8 @@
           <button
             mat-icon-button
             class="action-btn"
-            matTooltip="Search"
+            matTooltip="Search (Ctrl+K)"
+            (click)="openSearch()"
           >
             <mat-icon>search</mat-icon>
           </button>
@@ -215,7 +234,7 @@
             <mat-icon class="dropdown-arrow">keyboard_arrow_down</mat-icon>
           </button>
 
-          <mat-menu #userMenu="matMenu" class="enhanced-user-menu">
+          <mat-menu #userMenu="matMenu" class="custom-user-menu">
             <div class="user-menu-header">
               <div class="user-avatar-menu">
                 @if (authService.user()?.avatar) {

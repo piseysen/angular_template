@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, computed, inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, inject, ViewChild, HostListener } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -9,8 +9,11 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from '../../../core/services/auth.service';
+import { SearchService } from '../../../core/services/search.service';
+import { SearchOverlayComponent } from '../../components/search-overlay.component';
 import { EnvironmentIndicatorComponent } from '../../components/environment-indicator.component';
 import { EnvironmentService } from '../../../core/services/environment.service';
 import { filter } from 'rxjs';
@@ -32,6 +35,7 @@ import { filter } from 'rxjs';
     MatMenuModule,
     MatTooltipModule,
     MatBadgeModule,
+    MatDialogModule,
     EnvironmentIndicatorComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -40,8 +44,10 @@ export class MainLayoutComponent {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   
   protected readonly authService = inject(AuthService);
+  protected readonly searchService = inject(SearchService);
   private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly isHandset = signal(false);
   protected readonly environmentService = inject(EnvironmentService);
@@ -198,5 +204,27 @@ export class MainLayoutComponent {
 
   protected logout(): void {
     this.authService.logout();
+  }
+
+  protected openSearch(): void {
+    this.dialog.open(SearchOverlayComponent, {
+      width: '600px',
+      maxWidth: '90vw',
+      maxHeight: '80vh',
+      panelClass: 'search-dialog',
+      backdropClass: 'search-backdrop',
+      hasBackdrop: true,
+      disableClose: false,
+      autoFocus: true
+    });
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    // Ctrl+K or Cmd+K to open search
+    if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+      event.preventDefault();
+      this.openSearch();
+    }
   }
 }

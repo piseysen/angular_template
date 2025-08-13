@@ -52,8 +52,8 @@
   height: 100%;
 }
 
-// Enhanced Sidenav
-.enhanced-sidenav {
+// Custom Sidenav
+.custom-sidenav {
   background: var(--sidebar-bg);
   border-right: 1px solid var(--sidebar-border);
   width: 280px;
@@ -71,7 +71,7 @@
   
   // Mobile - let Angular Material handle overlay positioning
   @media (max-width: 768px) {
-    // Enhanced shadow for mobile overlay
+    // shadow for mobile overlay
     &.mat-drawer-over {
       box-shadow: 0 8px 10px -5px rgba(0,0,0,.2), 0 16px 24px 2px rgba(0,0,0,.14), 0 6px 30px 5px rgba(0,0,0,.12);
     }
@@ -400,7 +400,7 @@
 }
 
 // Toolbar & Content
-.enhanced-toolbar {
+.custom-toolbar {
   background: var(--toolbar-bg);
   border-bottom: 1px solid var(--toolbar-border);
   color: var(--toolbar-text);
@@ -501,7 +501,7 @@
 }
 
 // User Menu & Logout
-.enhanced-user-menu .mat-mdc-menu-panel {
+.custom-user-menu .mat-mdc-menu-panel {
   min-width: 240px;
   max-width: 280px;
 }
@@ -572,7 +572,7 @@
     padding: 0.75rem;
   }
   
-  .enhanced-toolbar {
+  .custom-toolbar {
     padding: 0 0.75rem;
   }
   
@@ -623,4 +623,80 @@
   50% {
     box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
   }
+}
+
+// Search Dialog Styles
+:host ::ng-deep {
+  .search-dialog {
+    .mat-mdc-dialog-container {
+      padding: 0;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .search-backdrop {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+  }
+}
+
+// Search Button
+.search-btn {
+  position: relative;
+  
+  &::after {
+    content: '⌘K';
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background: var(--sidebar-accent);
+    color: white;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: 500;
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  // Show Ctrl+K on non-Mac systems
+  @media (max-width: 768px) {
+    &::after {
+      content: 'K';
+    }
+  }
+}
+
+// Search Navigation Item
+.search-nav-item {
+  border: 1px dashed var(--sidebar-border) !important;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  
+  .mdc-list-item__content {
+    justify-content: space-between;
+  }
+  
+  .search-shortcut {
+    background: var(--sidebar-accent);
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-left: 2px;
+  }
+  
+  &:hover {
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    border-color: var(--sidebar-accent);
+  }
+}
+
+.search-divider {
+  margin: 8px 16px !important;
+  opacity: 0.5;
 }
