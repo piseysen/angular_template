@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, inject, ViewChild } from '@angular/core';
 import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -46,8 +46,16 @@ export class MainLayoutComponent {
   protected readonly isSidenavCollapsed = signal(false);
   protected readonly sidenavMode = signal<'side' | 'over'>('side');
 
-  // Menu items with enhanced structure
-  protected readonly menuItems = [
+    // Dynamic content margin based on sidebar state
+  contentMargin = computed(() => {
+    if (this.isHandset()) {
+      return '0px'; // No margin on mobile
+    }
+    return this.isSidenavCollapsed() ? '72px' : '280px';
+  });
+
+  // Menu items configuration
+  menuItems = [
     {
       icon: 'dashboard',
       label: 'Dashboard',

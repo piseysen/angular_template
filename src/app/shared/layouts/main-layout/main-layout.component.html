@@ -13,6 +13,8 @@
       [opened]="!isHandset()"
       class="enhanced-sidenav"
       [class.collapsed]="isSidenavCollapsed() && !isHandset()"
+      [fixedInViewport]="!isHandset()"
+      [fixedTopGap]="0"
     >
       <!-- Sidenav Header -->
       <div class="sidenav-header">
@@ -142,7 +144,7 @@
     </mat-sidenav>
 
     <!-- Main Content -->
-    <mat-sidenav-content class="main-content">
+    <mat-sidenav-content class="main-content" [style.margin-left]="contentMargin()">
       <!-- Enhanced Toolbar -->
       <mat-toolbar class="enhanced-toolbar">
         <div class="toolbar-left">
@@ -182,17 +184,6 @@
             matBadgeSize="small"
           >
             <mat-icon>notifications</mat-icon>
-          </button>
-          
-          <button
-            mat-icon-button
-            class="action-btn"
-            matTooltip="Messages"
-            [matBadge]="5"
-            matBadgeColor="accent"
-            matBadgeSize="small"
-          >
-            <mat-icon>mail</mat-icon>
           </button>
 
           <button
