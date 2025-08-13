@@ -58,8 +58,10 @@
             @for (item of menuItems; track item.route) {
               <mat-list-item 
                 class="nav-item" 
+                [class.active]="isMenuItemActive()(item.route)"
                 [routerLink]="item.route" 
                 routerLinkActive="active"
+                #rla="routerLinkActive"
                 [matTooltip]="(isSidenavCollapsed() && !isHandset()) ? item.tooltip : ''"
                 matTooltipPosition="right"
                 (click)="closeSidenav()"
@@ -93,8 +95,10 @@
             @for (item of userMenuItems; track item.route) {
               <mat-list-item 
                 class="nav-item" 
+                [class.active]="isMenuItemActive()(item.route)"
                 [routerLink]="item.route" 
                 routerLinkActive="active"
+                #rlaUser="routerLinkActive"
                 [matTooltip]="(isSidenavCollapsed() && !isHandset()) ? item.label : ''"
                 matTooltipPosition="right"
                 (click)="closeSidenav()"
@@ -169,7 +173,10 @@
           }
           
           <div class="page-title">
-            <h1>{{ authService.user()?.firstName ? 'Welcome, ' + authService.user()?.firstName : 'Dashboard' }}</h1>
+            <h1>{{ currentPageTitle() }}</h1>
+            @if (authService.user()?.firstName) {
+              <span class="welcome-text">Welcome back, {{ authService.user()?.firstName }}</span>
+            }
           </div>
         </div>
 
@@ -225,24 +232,7 @@
                 <div class="user-email">{{ authService.user()?.email }}</div>
               </div>
             </div>
-            
-            <mat-divider></mat-divider>
-            
-            <button mat-menu-item [routerLink]="['/profile']">
-              <mat-icon>person</mat-icon>
-              <span>My Profile</span>
-            </button>
-            
-            <button mat-menu-item [routerLink]="['/settings']">
-              <mat-icon>settings</mat-icon>
-              <span>Settings</span>
-            </button>
-            
-            <button mat-menu-item>
-              <mat-icon>help</mat-icon>
-              <span>Help & Support</span>
-            </button>
-            
+          
             <mat-divider></mat-divider>
             
             <button mat-menu-item (click)="logout()" class="logout-menu-item">

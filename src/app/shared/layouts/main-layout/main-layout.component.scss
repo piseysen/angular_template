@@ -219,32 +219,53 @@
   &:hover {
     background: var(--menu-hover);
     color: var(--sidebar-text-active);
+    transform: translateX(2px);
+    
+    .mat-icon {
+      transform: scale(1.05);
+    }
   }
   
   &.active {
     background: var(--menu-active);
     color: var(--sidebar-accent);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     
     .mat-icon {
       color: var(--sidebar-accent);
+      transform: scale(1.1);
     }
     
+    // Active indicator bar
     &::before {
       content: '';
       position: absolute;
       left: -0.5rem;
       top: 50%;
       transform: translateY(-50%);
-      width: 3px;
-      height: 24px;
-      background: var(--sidebar-accent);
+      width: 4px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--sidebar-accent) 0%, var(--sidebar-accent) 100%);
       border-radius: 2px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      animation: activeIndicator 0.3s ease-in-out;
+    }
+    
+    // Subtle glow effect
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+      border-radius: 0.75rem;
+      pointer-events: none;
     }
   }
   
   .mat-icon {
     color: inherit;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
   }
   
   &.logout-item {
@@ -415,11 +436,24 @@
   }
 }
 
-.page-title h1 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--toolbar-text);
+.page-title {
+  display: flex;
+  flex-direction: column;
+  
+  h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--toolbar-text);
+    line-height: 1.2;
+  }
+  
+  .welcome-text {
+    font-size: 0.75rem;
+    color: var(--sidebar-text);
+    opacity: 0.8;
+    margin-top: 2px;
+  }
 }
 
 .user-menu-trigger {
@@ -567,5 +601,26 @@
   
   .mat-mdc-list-item:hover {
     background: var(--menu-hover);
+  }
+}
+
+// Animations
+@keyframes activeIndicator {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scaleY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scaleY(1);
+  }
+}
+
+@keyframes pulseActive {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
   }
 }
